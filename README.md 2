@@ -1,0 +1,11 @@
+# Priority Tracker Backend
+
+Node.js + Express backend for tracking employee priorities.
+git init
+git add .
+git commit -m "Initial MVP backend commit"
+
+it remote add origin https://github.com/JacksonBishop2/PriorityTracker.git
+git branch -M main
+git push -u origin main
+
