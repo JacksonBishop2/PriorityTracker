@@ -1,10 +1,10 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Simple route for testing
-app.get('/', (req, res) => {
+// Explicitly type req and res
+app.get('/', (req: Request, res: Response) => {
   res.send('Priority Tracker API is running!');
 });
 
