@@ -59,3 +59,8 @@ app.post('/email/friday', async (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+} catch (err) {
+  console.error('SendGrid error:', err.response?.body || err);
+  res.status(500).json({ error: 'Failed to send Monday email' });
+}
