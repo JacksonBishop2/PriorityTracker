@@ -32,8 +32,8 @@ app.post('/email/monday', async (req: Request, res: Response) => {
     await sgMail.send(msg);
     res.status(200).json({ message: 'Monday email sent' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to send Monday email' });
+  console.error('SendGrid error:', err.response?.body || err);
+  res.status(500).json({ error: 'Failed to send Monday email' });
   }
 });
 
@@ -59,8 +59,3 @@ app.post('/email/friday', async (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-} catch (err) {
-  console.error('SendGrid error:', err.response?.body || err);
-  res.status(500).json({ error: 'Failed to send Monday email' });
-}
