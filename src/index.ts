@@ -32,7 +32,8 @@ app.post('/email/monday', async (req: Request, res: Response) => {
     await sgMail.send(msg);
     res.status(200).json({ message: 'Monday email sent' });
   } catch (err) {
-  console.error('SendGrid error:', err.response?.body || err);
+  const error = err as any;
+  console.error('SendGrid error:', error?.response?.body || error);
   res.status(500).json({ error: 'Failed to send Monday email' });
   }
 });
