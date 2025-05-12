@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mail_1 = __importDefault(require("@sendgrid/mail"));
+const db_1 = __importDefault(require("./db"));
+const json2csv_1 = require("json2csv");
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 // Middleware
@@ -62,6 +64,20 @@ app.post('/email/friday', (req, res) => __awaiter(void 0, void 0, void 0, functi
     catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to send Friday email' });
+    }
+}));
+app.get('/export', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield db_1.default.query('SELECT * FROM priorities ORDER BY week_start, email');
+        const parser = new json2csv_1.Parser();
+        const csv = parser.parse(result.rows);
+        res.header('Content-Type', 'text/csv');
+        res.attachment('priorities.csv');
+        res.send(csv);
+    }
+    catch (err) {
+        console.error('Export error:', err);
+        res.status(500).json({ error: 'Failed to export CSV' });
     }
 }));
 // Start the server

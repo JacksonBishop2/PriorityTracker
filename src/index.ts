@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import sgMail from '@sendgrid/mail';
+import pool from './db';
+import { Parser } from 'json2csv';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,6 +55,22 @@ app.post('/email/friday', async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to send Friday email' });
+  }
+});
+
+app.get('/export', async (_req: Request, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM priorities ORDER BY week_start, email');
+
+    const parser = new Parser();
+    const csv = parser.parse(result.rows);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('priorities.csv');
+    res.send(csv);
+  } catch (err: any) {
+    console.error('Export error:', err);
+    res.status(500).json({ error: 'Failed to export CSV' });
   }
 });
 
